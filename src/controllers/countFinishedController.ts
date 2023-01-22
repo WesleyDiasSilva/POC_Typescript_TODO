@@ -6,17 +6,14 @@ export async function countFinishedTasksController(
   res: Response
 ): Promise<Response> {
   try {
-    const status: string = req.query.status;
-    console.log(status);
-    const param = status.toLoweCase == 'true'
-    console.log(Boolean(status))
-    const result = await serviceCountTasks(Boolean(status));
-    if (result == -1) {
-      return res.status(400).send("not found!");
+    const {status} = req.query;
+    const param = status === 'true' ? true: false;
+    const count = await serviceCountTasks(param)
+    const response = {
+      number_of_tasks_finished: count
     }
-    return res.status(200).send(result);
+    return res.status(200).send(response)
   } catch (err) {
-    console.log(err);
-    return res.status(400).send(err);
+    return res.send("SAD")
   }
 }
